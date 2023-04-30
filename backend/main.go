@@ -26,10 +26,20 @@ func main() {
 	res := a.KMP(text, pattern)
 	switch res {
 		case -1:
-			fmt.Println("Pattern not found in text.")
+			fmt.Println("Pattern not found in text with KMP.")
 		case -2:
-			fmt.Println("Invalid input.")
+			fmt.Println("Invalid input for KMP.")
 		default:
-			fmt.Printf("Pattern found at index %d.\n", res)
+			fmt.Printf("Pattern found at index %d with KMP.\n", res)
+	}
+
+	res = a.BM(text, pattern)
+	switch res {
+		case -1:
+			fmt.Println("Pattern not found in text with BM.")
+		case -2:
+			fmt.Println("Invalid input for BM.")
+		default:
+			fmt.Printf("Pattern found at index %d with BM.\n", res)
 	}
 }

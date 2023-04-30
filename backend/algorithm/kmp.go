@@ -1,9 +1,5 @@
 package algorithm
 
-import (
-	"strings"
-)
-
 // KMP is a function that implements the Knuth-Morris-Pratt algorithm.
 // @params text: string to be searched
 // @params pattern: string to be searched for
@@ -12,11 +8,8 @@ import (
 //				-2 for invalid input (empty string, length of pattern > length of text, etc.)
 func (a Algorithm) KMP(text string, pattern string) int {
 	// lowercase the strings and remove whitespace
-	text = strings.ToLower(text)
-	text = strings.TrimSpace(text)
-
-	pattern = strings.ToLower(pattern)
-	pattern = strings.TrimSpace(pattern)
+	LowerAndTrim(&text)
+	LowerAndTrim(&pattern)
 
 	n := len(text)
 	m := len(pattern)
