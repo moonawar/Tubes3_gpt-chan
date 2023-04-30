@@ -7,7 +7,7 @@ import (
 type Algorithm struct {}
 
 // New is a constructor for Algorithm.
-func NewAlgorithm() Algorithm {
+func New() Algorithm {
 	return Algorithm{}
 }
 

@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	a := algo.NewAlgorithm()
+	a := algo.New()
 	reader := bufio.NewScanner(os.Stdin)
 
 	var text string	
