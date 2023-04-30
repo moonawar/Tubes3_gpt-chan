@@ -19,3 +19,11 @@ migrateup:
 
 migratedown:
 	migrate -path database/migrations -database "postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}?sslmode=disable" -verbose down
+
+migrateversion:
+	migrate -path database/migrations -database "postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}?sslmode=disable" -verbose version
+
+sqlc:
+	cd database && docker run --rm -v "$(WORKING_DIR):/src" -w /src kjconroy/sqlc generate
+
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc

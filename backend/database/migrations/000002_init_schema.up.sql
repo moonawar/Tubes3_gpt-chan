@@ -1,3 +1,10 @@
+DROP TABLE IF EXISTS "User" CASCADE;
+DROP TABLE IF EXISTS "QA" CASCADE;
+DROP TABLE IF EXISTS "Chat" CASCADE;
+DROP TABLE IF EXISTS "ChatQA" CASCADE;
+
+DROP FUNCTION IF EXISTS chatqa_no_increment() CASCADE;
+
 CREATE TABLE "User" (
   "username" varchar(40) PRIMARY KEY
 );
@@ -13,7 +20,7 @@ CREATE TABLE "Chat" (
   "username" varchar(40) NOT NULL
 );
 
-CREATE TABLE "ChatQA" (
+CREATE TABLE "Message" (
   "chat_id" int,
   "no" int NOT NULL,
   "question" varchar(255) NOT NULL,
@@ -22,17 +29,17 @@ CREATE TABLE "ChatQA" (
 
 ALTER TABLE "Chat" ADD FOREIGN KEY ("username") REFERENCES "User" ("username");
 
-ALTER TABLE "ChatQA" ADD FOREIGN KEY ("chat_id") REFERENCES "Chat" ("chat_id");
+ALTER TABLE "Message" ADD FOREIGN KEY ("chat_id") REFERENCES "Chat" ("chat_id");
 
-CREATE OR REPLACE FUNCTION chatqa_no_increment() RETURNS TRIGGER AS 
+CREATE OR REPLACE FUNCTION message_no_increment() RETURNS TRIGGER AS 
 $$
 BEGIN
-  SELECT COALESCE(MAX("no"), 0) + 1 INTO NEW."no" FROM "ChatQA" WHERE "chat_id" = NEW."chat_id";
+  SELECT COALESCE(MAX("no"), 0) + 1 INTO NEW."no" FROM "Message" WHERE "chat_id" = NEW."chat_id";
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger for inserting Weak Entity ChatQA
-CREATE OR REPLACE TRIGGER ChatQA BEFORE INSERT ON "ChatQA"
+CREATE OR REPLACE TRIGGER Message BEFORE INSERT ON "Message"
 FOR EACH ROW
-EXECUTE FUNCTION chatqa_no_increment();
+EXECUTE FUNCTION message_no_increment();
