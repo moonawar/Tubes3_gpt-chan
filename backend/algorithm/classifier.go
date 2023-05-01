@@ -49,7 +49,7 @@ func (a Algorithm) Classify(text string) int {
 // @note: candidate math expression does not necessarily correct math expression in terms of syntax
 // @example: "1 + 2" is a candidate math expression, and "1 +* 2 " is still considered as a candidate math expression
 //			 and thus both still return true. The syntax correctness is checked in the next step.
-func ContainsCandidateMathExp(text string) {
+func ContainsCandidateMathExp(text string) bool {
 	// remove whitespace so it's easier to check
 	Trim(&text)
 
