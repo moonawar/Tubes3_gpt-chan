@@ -15,3 +15,11 @@ func LowerAndTrim(s *string) {
 	*s = strings.ToLower(*s)
 	*s = strings.TrimSpace(*s)
 }
+
+func Lower(s *string) {
+	*s = strings.ToLower(*s)
+}
+
+func Trim(s *string) {
+	*s = strings.TrimSpace(*s)
+}

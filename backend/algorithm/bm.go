@@ -10,10 +10,10 @@ import (
 // @return int:  idx of the first occurrence of pattern in text [0, len(text) - len(pattern))]
 // 				-1 if pattern is not found in text,
 //				-2 for invalid input (empty string, length of pattern > length of text, etc.)
+// @note : BM is whitespace sensitive
 func (a Algorithm) BM(text string, pattern string) int {
-	// lowercase the strings and remove whitespace
-	LowerAndTrim(&text)
-	LowerAndTrim(&pattern)
+	Lower(&text)
+	Lower(&pattern)
 
 	n := len(text)
 	m := len(pattern)
