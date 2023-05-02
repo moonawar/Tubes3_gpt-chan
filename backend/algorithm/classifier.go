@@ -14,10 +14,10 @@ import (
 // 				 8: text contains a QA delete request
 
 // @example return : text is a math expression and a date question
-//					return = 1 + 2 = 3
+//
+//	return = 1 + 2 = 3
 func (a Algorithm) Classify(text string) int {
 	res := 0
-	Lower(&text) // not case sensitive
 
 	// check if text contains candidate math expression
 	if ContainsCandidateMathExp(text) {
@@ -28,8 +28,6 @@ func (a Algorithm) Classify(text string) int {
 	if ContainsDate(text) {
 		res += 2
 	}
-
-
 
 	// check if text contains QA add request
 	if ContainsQAAddRequest(text) {
@@ -47,11 +45,13 @@ func (a Algorithm) Classify(text string) int {
 // ContainsCandidateMathExp is a function that checks if the given text contains a candidate math expression.
 // @params text: input string to be checked
 // @return bool: true if text contaions candidate math expression, false otherwise
-//     []string: array of candidate math expression
+//
+//	[]string: array of candidate math expression
 //
 // @note: candidate math expression does not necessarily correct math expression in terms of syntax
 // @example: "1 + 2" is a candidate math expression, and "1 +* 2 " is still considered as a candidate math expression
-//			 and thus both still return true. The syntax correctness is checked in the next step.
+//
+//	and thus both still return true. The syntax correctness is checked in the next step.
 func ContainsCandidateMathExp(text string) bool {
 	// remove whitespace so it's easier to check
 	Trim(&text)
@@ -61,7 +61,7 @@ func ContainsCandidateMathExp(text string) bool {
 
 	re := regexp.MustCompile(regex_string)
 	all_exps := re.FindAllString(text, -1) // all candidate math expressions including date and unary expression
-	pure_exps := []string{} // remove date and unary expression
+	pure_exps := []string{}                // remove date and unary expression
 
 	for _, exp := range all_exps {
 		if !ContainsDate(exp) && !IsUnaryMathExp(exp) {
@@ -101,13 +101,13 @@ func ContainsDate(text string) bool {
 	return re.MatchString(text)
 }
 
-
 // ContainsQAAddRequest is a function that checks if the given text contains a QA add request.
 // @params text: input string to be checked
 // @return bool: true if text contains a QA add request, false otherwise
 //
-// @note: format: 
-//		  Tambah pertanyaan <pertanyaan> dengan jawaban <jawaban>
+// @note: format:
+//
+//	Tambah pertanyaan <pertanyaan> dengan jawaban <jawaban>
 func ContainsQAAddRequest(text string) bool {
 	regex_string := `[Tt]ambah(\s+)?[Pp]ertanyaan(\s+)?([\w\s]+)(\s+)?[Dd]engan(\s+)?[Jj]awaban(\s+)?([\w\s]+)`
 
@@ -119,8 +119,9 @@ func ContainsQAAddRequest(text string) bool {
 // @params text: input string to be checked
 // @return bool: true if text contains a QA delete request, false otherwise
 //
-// @note: format: 
-//		  Hapus pertanyaan <pertanyaan>
+// @note: format:
+//
+//	Hapus pertanyaan <pertanyaan>
 func ContainsQADeleteRequest(text string) bool {
 	regex_string := `[Hh]apus(\s+)?[Pp]ertanyaan(\s+)?([\w\s]+)`
 
@@ -131,7 +132,6 @@ func ContainsQADeleteRequest(text string) bool {
 // ExtractMathExps is a function that extracts math expressions from the given text.
 // @params text: input string to be checked
 // @return []string: array of math expressions
-//
 func ExtractMathExps(text string) []string {
 	regex_string := `(\d+|\(-?\d+\))(\s*[-+*/\s]*\s*(\d+|\(-?\d+\)))*`
 

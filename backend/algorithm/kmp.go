@@ -7,10 +7,6 @@ package algorithm
 // 				-1 if pattern is not found in text,
 //				-2 for invalid input (empty string, length of pattern > length of text, etc.)
 func (a Algorithm) KMP(text string, pattern string) int {
-	// lowercase the strings and remove whitespace
-	Lower(&text)
-	Lower(&pattern)
-
 	n := len(text)
 	m := len(pattern)
 
@@ -27,7 +23,7 @@ func (a Algorithm) KMP(text string, pattern string) int {
 	for i < n {
 		if text[i] == pattern[j] {
 			// if the characters match, then increment both indices
-			if j == m - 1 {
+			if j == m-1 {
 				// pattern found, return 1
 				return i - len(pattern) + 1
 			}
@@ -35,7 +31,7 @@ func (a Algorithm) KMP(text string, pattern string) int {
 			j++
 		} else if j > 0 {
 			// if the characters don't match, then decrement the pattern index
-			j = b[j - 1]
+			j = b[j-1]
 		} else {
 			// if the characters don't match and there is no previous border, then increment the text index
 			i++
@@ -51,8 +47,8 @@ func (a Algorithm) KMP(text string, pattern string) int {
 // @return int[]: border array of pattern
 func computeBorder(pattern string) []int {
 	b := make([]int, len(pattern)) // border array
-	b[0] = 0 // first element is always 0
-	
+	b[0] = 0                       // first element is always 0
+
 	j := 0 // index of the border
 	i := 1 // index of the element being computed
 
@@ -64,7 +60,7 @@ func computeBorder(pattern string) []int {
 			j++
 		} else if j > 0 {
 			// if the characters don't match, then the border is the border of the previous border
-			j = b[j - 1]
+			j = b[j-1]
 		} else {
 			// if the characters don't match and there is no previous border, then the border is 0
 			b[i] = 0
