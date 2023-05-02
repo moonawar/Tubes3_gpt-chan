@@ -20,11 +20,12 @@ func DateToDay(date string) string {
 	return day_of_a_week_indonesia[t_date.Weekday()]
 }
 
-// ExtractDates extract dates from a string.
+// ExtractDates extract date from a string.
 // @params text: string to be extracted
 // @return date: date string in the format of "dd/mm/yyyy", may be empty or multiple
 func ExtractDates(text string) []string {
 	Lower(&text) // not case sensitive
+	Trim(&text) // remove whitespace so it's easier to check
 	regex_pattern := `(\d{1,2})[\/\-\\](\d{1,2})[\/\-\\](\d{4})`
 
 	re := regexp.MustCompile(regex_pattern)
