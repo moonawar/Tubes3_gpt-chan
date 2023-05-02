@@ -17,6 +17,7 @@ var test_cases = map[string]int {
 	"berapa 1*4+5? dan hari apa tanggal 19/05/2023?": 3,
 	"berapa 1*4+5? dan hari apa tanggal 19/05/2023? dan tambah pertanyaan matkul apa yang paling seru di semester 4 dengan jawaban stima?": 7,
 	"axolotl" : 0,
+	"-2" : 0,
 }
 
 func TestClassify(t *testing.T) {

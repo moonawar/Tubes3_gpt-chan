@@ -6,3 +6,6 @@ SELECT * FROM "Message" WHERE chat_id = $1 ORDER BY "no" DESC;
 
 -- name: GetLimitedChatMessages :many
 SELECT * FROM "Message" WHERE chat_id = $1 ORDER BY "no" DESC LIMIT $2;
+
+-- name: GetLimeChatMessagesWithOffset :many
+SELECT * FROM "Message" WHERE chat_id = $1 ORDER BY "no" DESC LIMIT $3 OFFSET $2;

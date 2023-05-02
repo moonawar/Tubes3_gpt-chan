@@ -64,6 +64,44 @@ func (q *Queries) GetChatMessages(ctx context.Context, chatID sql.NullInt32) ([]
 	return items, nil
 }
 
+const getLimeChatMessagesWithOffset = `-- name: GetLimeChatMessagesWithOffset :many
+SELECT chat_id, no, question, answer FROM "Message" WHERE chat_id = $1 ORDER BY "no" DESC LIMIT $3 OFFSET $2
+`
+
+type GetLimeChatMessagesWithOffsetParams struct {
+	ChatID sql.NullInt32 `json:"chat_id"`
+	Offset int32         `json:"offset"`
+	Limit  int32         `json:"limit"`
+}
+
+func (q *Queries) GetLimeChatMessagesWithOffset(ctx context.Context, arg GetLimeChatMessagesWithOffsetParams) ([]Message, error) {
+	rows, err := q.db.QueryContext(ctx, getLimeChatMessagesWithOffset, arg.ChatID, arg.Offset, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Message
+	for rows.Next() {
+		var i Message
+		if err := rows.Scan(
+			&i.ChatID,
+			&i.No,
+			&i.Question,
+			&i.Answer,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getLimitedChatMessages = `-- name: GetLimitedChatMessages :many
 SELECT chat_id, no, question, answer FROM "Message" WHERE chat_id = $1 ORDER BY "no" DESC LIMIT $2
 `
