@@ -1,4 +1,4 @@
-include .env
+include app.env
 export
 
 postgres:
@@ -25,5 +25,8 @@ migrateversion:
 
 sqlc:
 	cd database && docker run --rm -v "$(WORKING_DIR):/src" -w /src kjconroy/sqlc generate
+
+server:
+	go run main.go
 
 .PHONY: postgres createdb dropdb migrateup migratedown sqlc
