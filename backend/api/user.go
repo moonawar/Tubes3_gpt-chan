@@ -6,12 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type addUserRequest struct {
+type AddUserRequest struct {
 	Username string `json:"username" binding:"required,min=1"`
 }
 
-func (server *Server) addUser(c *gin.Context) {
-	var req addUserRequest
+func (server *Server) AddUser(c *gin.Context) {
+	var req AddUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err))
 		return

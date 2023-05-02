@@ -21,22 +21,22 @@ func (q *Queries) CreateChat(ctx context.Context, username string) (Chat, error)
 }
 
 const getUserChat = `-- name: GetUserChat :many
-SELECT chat_id, username FROM "Chat" WHERE username = $1
+SELECT "chat_id" FROM "Chat" WHERE username = $1
 `
 
-func (q *Queries) GetUserChat(ctx context.Context, username string) ([]Chat, error) {
+func (q *Queries) GetUserChat(ctx context.Context, username string) ([]int32, error) {
 	rows, err := q.db.QueryContext(ctx, getUserChat, username)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Chat
+	var items []int32
 	for rows.Next() {
-		var i Chat
-		if err := rows.Scan(&i.ChatID, &i.Username); err != nil {
+		var chat_id int32
+		if err := rows.Scan(&chat_id); err != nil {
 			return nil, err
 		}
-		items = append(items, i)
+		items = append(items, chat_id)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err

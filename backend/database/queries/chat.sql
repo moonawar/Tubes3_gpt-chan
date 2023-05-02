@@ -2,4 +2,4 @@
 INSERT INTO "Chat" (username) VALUES ($1) RETURNING *;
 
 -- name: GetUserChat :many
-SELECT * FROM "Chat" WHERE username = $1;
+SELECT "chat_id" FROM "Chat" WHERE username = $1;

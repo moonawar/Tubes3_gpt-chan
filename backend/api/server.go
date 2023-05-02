@@ -17,7 +17,10 @@ func NewServer(query *db.Queries) *Server {
 		router: gin.Default(),
 	}
 
-	server.router.POST("/user", server.addUser)
+	server.router.POST("/user", server.AddUser)
+	server.router.POST("/chat", server.CreateChat)
+	server.router.GET("/chat/:username", server.GetUserChat)
+
 	return server
 }
 
