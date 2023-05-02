@@ -33,11 +33,48 @@ func (q *Queries) CreateMessage(ctx context.Context, arg CreateMessageParams) (M
 }
 
 const getChatMessages = `-- name: GetChatMessages :many
-SELECT chat_id, no, question, answer FROM "Message" WHERE chat_id = $1
+SELECT chat_id, no, question, answer FROM "Message" WHERE chat_id = $1 ORDER BY "no" DESC
 `
 
 func (q *Queries) GetChatMessages(ctx context.Context, chatID sql.NullInt32) ([]Message, error) {
 	rows, err := q.db.QueryContext(ctx, getChatMessages, chatID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Message
+	for rows.Next() {
+		var i Message
+		if err := rows.Scan(
+			&i.ChatID,
+			&i.No,
+			&i.Question,
+			&i.Answer,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getLimitedChatMessages = `-- name: GetLimitedChatMessages :many
+SELECT chat_id, no, question, answer FROM "Message" WHERE chat_id = $1 ORDER BY "no" DESC LIMIT $2
+`
+
+type GetLimitedChatMessagesParams struct {
+	ChatID sql.NullInt32 `json:"chat_id"`
+	Limit  int32         `json:"limit"`
+}
+
+func (q *Queries) GetLimitedChatMessages(ctx context.Context, arg GetLimitedChatMessagesParams) ([]Message, error) {
+	rows, err := q.db.QueryContext(ctx, getLimitedChatMessages, arg.ChatID, arg.Limit)
 	if err != nil {
 		return nil, err
 	}
