@@ -1,33 +1,69 @@
+@import "@catppuccin/palette/style";
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background-color: var(--ctp-frappe-surface0);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Roboto, sans-serif;
+}
+
 .App {
-  text-align: center;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--ctp-macchiato-base);
 }
 
-.logo {
-  animation: logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.msg {
+  width: 100%;
   color: white;
+  background-color: transparent;
+  min-height: fit-content;
+  max-height: 180px;
+  font-size: medium;
+  border: none;
+  outline: none;
+  resize: none;
 }
 
-.link {
-  color: #b318f0;
+.msg::placeholder {
+  color: var(--ctp-macchiato-text);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.msgWrapper {
+  position: relative;
+  width: 70%;
+  background-color: var(--ctp-macchiato-overlay0);
+  padding: 10px 0 10px 15px;
+  border-radius: 5px;
+}
+
+.sendMsg {
+  position: absolute;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  user-select: none;
+  right: 10px;
+  bottom: 10px;
+  color: #AAA;
 }
