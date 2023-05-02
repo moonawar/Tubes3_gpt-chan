@@ -4,20 +4,17 @@ import {createSignal} from "solid-js";
 
 function MessageBox() {
     const [msg, setMsg] = createSignal("");
-
     const sendMsgEnter = ({target}) => {
         if (msg().length > 0) {
             target.style.background = "#11111180";
             target.style.cursor = "pointer";
         }
     };
-
     const questionKeyDown = event => {
         if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
         }
     };
-
     const onMsgInput = ({target}) => {
         setMsg(target.value);
         target.style.height = 0;
@@ -28,7 +25,6 @@ function MessageBox() {
             document.getElementById("send-msg-wrapper").style.color = "#AAA";
         }
     };
-
     const sendMsgLeave = ({target}) => {
         target.style.background = "transparent";
         target.style.cursor = "default";
@@ -63,7 +59,10 @@ function MessageBox() {
 function App() {
     return (
         <div class={styles.App}>
-            <MessageBox />
+            <div id="left"></div>
+            <div class={styles.left}>
+                <MessageBox />
+            </div>
         </div>
     );
 }
