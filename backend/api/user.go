@@ -7,7 +7,7 @@ import (
 )
 
 type addUserRequest struct {
-	Username string `json:"username" binding:"required"`
+	Username string `json:"username" binding:"required,min=1"`
 }
 
 func (server *Server) addUser(c *gin.Context) {

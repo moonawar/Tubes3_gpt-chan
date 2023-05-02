@@ -17,8 +17,7 @@ func NewServer(query *db.Queries) *Server {
 		router: gin.Default(),
 	}
 
-	// router.POST("/", server.CreateUser)
-
+	server.router.POST("/user", server.addUser)
 	return server
 }
 
