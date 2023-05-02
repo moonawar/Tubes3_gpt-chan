@@ -19,22 +19,24 @@ func (a Algorithm) Classify(text string) int {
 	res := 0
 	Lower(&text) // not case sensitive
 
-	// check if text is a math expression
+	// check if text contains candidate math expression
 	if ContainsCandidateMathExp(text) {
 		res += 1
 	}
 
-	// check if text is a date question
+	// check if text contains date, date is cheked for edge case
 	if ContainsDate(text) {
 		res += 2
 	}
 
-	// check if text is a QA add request
+
+
+	// check if text contains QA add request
 	if ContainsQAAddRequest(text) {
 		res += 4
 	}
 
-	// check if text is a QA delete request
+	// check if text contains QA delete request
 	if ContainsQADeleteRequest(text) {
 		res += 8
 	}
@@ -45,6 +47,7 @@ func (a Algorithm) Classify(text string) int {
 // ContainsCandidateMathExp is a function that checks if the given text contains a candidate math expression.
 // @params text: input string to be checked
 // @return bool: true if text contaions candidate math expression, false otherwise
+//     []string: array of candidate math expression
 //
 // @note: candidate math expression does not necessarily correct math expression in terms of syntax
 // @example: "1 + 2" is a candidate math expression, and "1 +* 2 " is still considered as a candidate math expression
@@ -53,8 +56,31 @@ func ContainsCandidateMathExp(text string) bool {
 	// remove whitespace so it's easier to check
 	Trim(&text)
 
-	// at least contains a binary expression
-	regex_string := `\(?(\d+)\)?([\+\-\*\/\^]+)\(?(\d+)\)?`
+	// recursively check for math expression
+	regex_string := `(\d+|\(-?\d+\))(\s*[-+*/\s]*\s*(\d+|\(-?\d+\)))*`
+
+	re := regexp.MustCompile(regex_string)
+	all_exps := re.FindAllString(text, -1) // all candidate math expressions including date and unary expression
+	pure_exps := []string{} // remove date and unary expression
+
+	for _, exp := range all_exps {
+		if !ContainsDate(exp) && !IsUnaryMathExp(exp) {
+			pure_exps = append(pure_exps, exp)
+		}
+	}
+
+	return len(pure_exps) > 0
+}
+
+// IsUnaryMathExp is a function that checks if the given text is a unary math expression.
+// @params text: input string to be checked
+// @return bool: true if text is a unary math expression, false otherwise
+func IsUnaryMathExp(text string) bool {
+	// remove whitespace so it's easier to check
+	Trim(&text)
+
+	// recursively check for math expression
+	regex_string := `^(\d+|\(-?\d+\))$`
 
 	re := regexp.MustCompile(regex_string)
 	return re.MatchString(text)
@@ -100,4 +126,15 @@ func ContainsQADeleteRequest(text string) bool {
 
 	re := regexp.MustCompile(regex_string)
 	return re.MatchString(text)
+}
+
+// ExtractMathExps is a function that extracts math expressions from the given text.
+// @params text: input string to be checked
+// @return []string: array of math expressions
+//
+func ExtractMathExps(text string) []string {
+	regex_string := `(\d+|\(-?\d+\))(\s*[-+*/\s]*\s*(\d+|\(-?\d+\)))*`
+
+	re := regexp.MustCompile(regex_string)
+	return re.FindAllString(text, -1)
 }
