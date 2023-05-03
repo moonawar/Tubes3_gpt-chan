@@ -72,8 +72,6 @@ func (server *Server) CreateMessage(c *gin.Context) {
 	// classify the question
 	code := alg.Classify(l_question)
 
-	fmt.Println("New request with code: ", code)
-
 	var answer string
 
 	if code/8 >= 1 {

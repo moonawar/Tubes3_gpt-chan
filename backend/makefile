@@ -29,4 +29,13 @@ sqlc:
 server:
 	go run main.go
 
+image:
+	docker build -t gpt-chan:latest .
+
+run:
+	docker run --name gpt-chan --network app-network -p 8080:8080 \
+	-e GIN_MODE=release \
+	-e DB_SOURCE="postgresql://${DB_USER}:${DB_PASS}@postgres:5432/${DB_NAME}?sslmode=disable" \
+	gpt-chan:latest
+
 .PHONY: postgres createdb dropdb migrateup migratedown sqlc
