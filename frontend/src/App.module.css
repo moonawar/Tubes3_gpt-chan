@@ -15,7 +15,7 @@
 ::-webkit-scrollbar-thumb {
   -webkit-border-radius: 10px;
   border-radius: 10px;
-  background-color: var(--ctp-frappe-surface0);
+  background-color: var(--ctp-mocha-surface2);
 }
 
 * {
@@ -23,6 +23,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: Roboto, sans-serif;
+  color: var(--ctp-mocha-text)
 }
 
 .App {
