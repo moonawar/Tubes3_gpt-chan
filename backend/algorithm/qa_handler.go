@@ -8,22 +8,22 @@ import (
 // @params text: string to be extracted
 // @return question: question string, may be empty or multiple
 func ExtractAddQuestions(text string) []string {
-	regex_pattern := `(?<=[Tt]ambah(\s)[Pp]ertanyaan(\s))([\w\s]+)(?=[Dd]engan)`
+	regex_pattern := `(?<=[Tt]ambah(\s)[Pp]ertanyaan(\s))(.+)(?=[Dd]engan)`
 	re := regexp.MustCompile(regex_pattern)
 	text = RemoveExtraSpaces(text)
-	
+
 	res := re.FindAllString(text, -1)
 	for i := 0; i < len(res); i++ {
 		TrimFrontBack(&res[i])
 	}
-	return res 
+	return res
 }
 
 // ExtractAnswers extract answers from a string.
 // @params text: string to be extracted
 // @return answer: answer string, may be empty or multiple
 func ExtractAnswers(text string) []string {
-	regex_pattern := `(?<=[Dd]engan(\s)[Jj]awaban(\s))([\w\s]+)`
+	regex_pattern := `(?<=[Dd]engan(\s)[Jj]awaban(\s))(.+)`
 	re := regexp.MustCompile(regex_pattern)
 	text = RemoveExtraSpaces(text)
 
@@ -38,7 +38,7 @@ func ExtractAnswers(text string) []string {
 // @params text: string to be extracted
 // @return question: question string, may be empty or multiple
 func ExtractDeleteQuestions(text string) []string {
-	regex_pattern := `(?<=[Hh]apus(\s)[Pp]ertanyaan(\s))([\w\s]+)`
+	regex_pattern := `(?<=[Hh]apus(\s)[Pp]ertanyaan(\s))(.+)`
 	re := regexp.MustCompile(regex_pattern)
 	text = RemoveExtraSpaces(text)
 

@@ -20,6 +20,12 @@ func NewServer(query *db.Queries) *Server {
 	server.router.POST("/user", server.AddUser)
 	server.router.POST("/chat", server.CreateChat)
 	server.router.GET("/chat/:username", server.GetUserChat)
+	server.router.POST("/message", server.CreateMessage)
+	server.router.GET("/message", server.GetChatMessages)
+	server.router.POST("/qa", server.CreateQA)
+	server.router.GET("/qa", server.GetAllQA)
+	server.router.DELETE("/qa", server.RemoveQA)
+	server.router.PUT("/qa", server.UpdateQA)
 
 	return server
 }

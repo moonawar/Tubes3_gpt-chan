@@ -1,6 +1,7 @@
 package algorithm
 
 import (
+	"math"
 	"strings"
 )
 
@@ -35,18 +36,16 @@ func TrimFrontBack(s *string) {
 // HammingDistance is a function that calculates the hamming distance between two strings.
 // @param s1: string 1
 // @param s2: string 2
-// @return: hamming distance, -1 if strings are not the same length
-func HammingDistance(s1, s2 string) int {
-	if len(s1) != len(s2) {
-		return -1
-	}
+// @return: hamming distance in percentage (0 - 1), meaning
+func (alg *Algorithm) HammingDistance(s1, s2 string) float64 {
+	l := int(math.Min(float64(len(s1)), float64(len(s2))))
 
-	var distance int
-	for i := 0; i < len(s1); i++ {
+	distance := 0
+	for i := 0; i < l; i++ {
 		if s1[i] != s2[i] {
 			distance++
 		}
 	}
 
-	return distance
+	return 1 - (float64(distance) / float64(l))
 }

@@ -1,11 +1,13 @@
 package algorithm
 
 // KMP is a function that implements the Knuth-Morris-Pratt algorithm.
-// @params text: string to be searched
-// @params pattern: string to be searched for
-// @return int:  idx of the first occurrence of pattern in text [0, len(text) - len(pattern))]
-// 				-1 if pattern is not found in text,
-//				-2 for invalid input (empty string, length of pattern > length of text, etc.)
+// 	@params
+// 		text: string to be searched
+//		pattern: string to be searched for
+// 	@return int:
+//		idx of the first occurrence of pattern in text [0, len(text) - len(pattern))]
+// 		-1 if pattern is not found in text,
+//		-2 for invalid input (empty string, length of pattern > length of text, etc.)
 func (a Algorithm) KMP(text string, pattern string) int {
 	n := len(text)
 	m := len(pattern)

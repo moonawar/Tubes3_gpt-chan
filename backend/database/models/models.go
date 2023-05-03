@@ -4,9 +4,7 @@
 
 package db
 
-import (
-	"database/sql"
-)
+import ()
 
 type Chat struct {
 	ChatID   int32  `json:"chat_id"`
@@ -14,10 +12,10 @@ type Chat struct {
 }
 
 type Message struct {
-	ChatID   sql.NullInt32 `json:"chat_id"`
-	No       int32         `json:"no"`
-	Question string        `json:"question"`
-	Answer   string        `json:"answer"`
+	ChatID   int32  `json:"chat_id"`
+	No       int32  `json:"no"`
+	Question string `json:"question"`
+	Answer   string `json:"answer"`
 }
 
 type QA struct {

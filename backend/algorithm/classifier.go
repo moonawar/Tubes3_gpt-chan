@@ -8,10 +8,10 @@ import (
 // @params text: input string to be classified
 // @return int: sums of possible classifications
 //				 0: text is a question to be searched for in database
-//				 1: text contains a candidate of math expression
-// 				 2: text contains a date question
-// 				 4: text contains a QA add request
-// 				 8: text contains a QA delete request
+//				 8: text contains a candidate of math expression
+// 				 4: text contains a date question
+// 				 2: text contains a QA add request
+// 				 1: text contains a QA delete request
 
 // @example return : text is a math expression and a date question
 //
@@ -21,22 +21,22 @@ func (a Algorithm) Classify(text string) int {
 
 	// check if text contains candidate math expression
 	if ContainsCandidateMathExp(text) {
-		res += 1
+		res += 8
 	}
 
 	// check if text contains date, date is cheked for edge case
 	if ContainsDate(text) {
-		res += 2
+		res += 4
 	}
 
 	// check if text contains QA add request
 	if ContainsQAAddRequest(text) {
-		res += 4
+		res += 2
 	}
 
 	// check if text contains QA delete request
 	if ContainsQADeleteRequest(text) {
-		res += 8
+		res += 1
 	}
 
 	return res
@@ -109,7 +109,7 @@ func ContainsDate(text string) bool {
 //
 //	Tambah pertanyaan <pertanyaan> dengan jawaban <jawaban>
 func ContainsQAAddRequest(text string) bool {
-	regex_string := `[Tt]ambah(\s+)?[Pp]ertanyaan(\s+)?([\w\s]+)(\s+)?[Dd]engan(\s+)?[Jj]awaban(\s+)?([\w\s]+)`
+	regex_string := `[Tt]ambah(\s+)?[Pp]ertanyaan(\s+)?(.+)(\s+)?[Dd]engan(\s+)?[Jj]awaban(\s+)?(.+)`
 
 	re := regexp.MustCompile(regex_string)
 	return re.MatchString(text)
