@@ -18,14 +18,14 @@ const (
 )
 
 type GetChatMessagesRequest struct {
-	ChatID int32 `json:"chat_id" binding:"required"`
-	Limit  int32 `json:"limit"`
-	Page   int32 `json:"page"`
+	ChatID int32 `form:"chat_id" binding:"required"`
+	Limit  int32 `form:"limit"`
+	Page   int32 `form:"page"`
 }
 
 func (server *Server) GetChatMessages(c *gin.Context) {
 	var req GetChatMessagesRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBind(&req); err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
