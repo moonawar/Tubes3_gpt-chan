@@ -38,4 +38,10 @@ run:
 	-e DB_SOURCE="postgresql://${DB_USER}:${DB_PASS}@postgres:5432/${DB_NAME}?sslmode=disable" \
 	gpt-chan:latest
 
+deploy:
+	docker rmi gpt-chan
+	docker build -t gpt-chan:latest .
+	docker tag gpt-chan:latest gcr.io/gpt-chan-385720/app
+	docker push gcr.io/gpt-chan-385720/app
+
 .PHONY: postgres createdb dropdb migrateup migratedown sqlc
