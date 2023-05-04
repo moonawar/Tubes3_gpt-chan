@@ -7,6 +7,7 @@ import (
 	db "gpt-chan/database/models"
 	util "gpt-chan/util"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -277,14 +278,17 @@ func handleMathMessage(input string, output *string) {
 	// contains math question
 	// extract the math expression
 	math_exps := algo.ExtractMathExps(input)
+	alg := algo.New()
 	for _, exp := range math_exps {
 		// solve the math expression
-		// res, stat := alg.Solve(exp)
-		// if stat == 0 { // success
-		// answer += "Hasil dari " + exp + " adalah " + res + "\n"
-		// } else { // error
-		*output += "Tidak dapat menyelesaikan " + exp + " karena kesalahan sintaks.\n"
-		// }
+		res, err := alg.SolveMath(exp)
+		res_str := strconv.FormatFloat(res, 'f', 2, 64)
+		if err == nil { // success
+			*output += "Hasil dari " + exp + " adalah " + res_str + "\n"
+		} else { // error
+			*output += "Tidak dapat menyelesaikan " + exp + " karena kesalahan sintaks.\n"
+			fmt.Println(err)
+		}
 	}
 }
 

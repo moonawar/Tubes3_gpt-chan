@@ -57,7 +57,7 @@ func ContainsCandidateMathExp(text string) bool {
 	Trim(&text)
 
 	// recursively check for math expression
-	regex_string := `(\d+|\(-?\d+\))(\s*[-+*/\s]*\s*(\d+|\(-?\d+\)))*`
+	regex_string := `(-?\d+|\(-?\d+\)|\(-?\d+)([\-\+\*\/\^]*((\(-?\d+\)|-?\d+\)|\d+|\(-?\d+)))*`
 
 	re := regexp.MustCompile(regex_string)
 	all_exps := re.FindAllString(text, -1) // all candidate math expressions including date and unary expression
@@ -133,8 +133,20 @@ func ContainsQADeleteRequest(text string) bool {
 // @params text: input string to be checked
 // @return []string: array of math expressions
 func ExtractMathExps(text string) []string {
-	regex_string := `(\d+|\(-?\d+\))(\s*[-+*/\s]*\s*(\d+|\(-?\d+\)))*`
+	// remove whitespace so it's easier to check
+	Trim(&text)
+
+	regex_string := `(-?\d+|\(-?\d+\)|\(-?\d+)([\-\+\*\/\^]*((\(-?\d+\)|-?\d+\)|\d+|\(-?\d+)))*`
 
 	re := regexp.MustCompile(regex_string)
-	return re.FindAllString(text, -1)
+	all_exps := re.FindAllString(text, -1) // all candidate math expressions including date and unary expression
+	pure_exps := []string{}                // remove date and unary expression
+
+	for _, exp := range all_exps {
+		if !ContainsDate(exp) && !IsUnaryMathExp(exp) {
+			pure_exps = append(pure_exps, exp)
+		}
+	}
+
+	return pure_exps
 }
