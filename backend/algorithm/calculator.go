@@ -1,30 +1,27 @@
 package algorithm
 
 import (
-	"bufio"
 	"errors"
-	"fmt"
 	"math"
-	"os"
 	"strconv"
 	"strings"
 )
 
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Masukkan persamaan matematika:")
-	expr, _ := reader.ReadString('\n')
-	expr = strings.TrimSpace(expr)
-	// input := "-1 + 2 * 3 + ( -5  * 7)"
-	preprocess := preprocessInput(expr)
-	shunting := shuntingYard(preprocess)
-	result, err := evaluatePostfix(shunting)
-	if err != nil {
-		fmt.Printf("Error       : '%s'\n", err)
-	} else {
-		fmt.Printf("Result      : '%f'\n", result)
-	}
-}
+// func main() {
+// 	reader := bufio.NewReader(os.Stdin)
+// 	fmt.Println("Masukkan persamaan matematika:")
+// 	expr, _ := reader.ReadString('\n')
+// 	expr = strings.TrimSpace(expr)
+// 	// input := "-1 + 2 * 3 + ( -5  * 7)"
+// 	preprocess := preprocessInput(expr)
+// 	shunting := shuntingYard(preprocess)
+// 	result, err := evaluatePostfix(shunting)
+// 	if err != nil {
+// 		fmt.Printf("Error       : '%s'\n", err)
+// 	} else {
+// 		fmt.Printf("Result      : '%f'\n", result)
+// 	}
+// }
 
 type Operator struct {
 	precedence        int
