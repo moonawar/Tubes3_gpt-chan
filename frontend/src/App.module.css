@@ -85,7 +85,7 @@
   bottom: 0;
   width: 100%;
   background: rgb(69,71,90);
-  background: linear-gradient(180deg, rgba(69,71,90,0.8) 0%, rgba(69,71,90,1) 60%, rgba(69,71,90,1) 100%);
+  background: linear-gradient(180deg, rgba(69,71,90,0.4) 0%, rgba(69,71,90,1) 100%);
 }
 
 .msgWrapper {
