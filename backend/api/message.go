@@ -1,8 +1,8 @@
 package api
 
 import (
+	"container/heap"
 	"errors"
-	"fmt"
 	algo "gpt-chan/algorithm"
 	db "gpt-chan/database/models"
 	util "gpt-chan/util"
@@ -73,8 +73,6 @@ func (server *Server) CreateMessage(c *gin.Context) {
 	// classify the question
 	code := alg.Classify(l_question)
 
-	fmt.Println("New request with code: ", code)
-
 	var answer string
 
 	if code/8 >= 1 {
@@ -96,8 +94,8 @@ func (server *Server) CreateMessage(c *gin.Context) {
 		return
 	}
 
-	var candidates_qa util.PriorityQueue // list of QA id that matches the question or most similar
-	queueSize := 5                       // number of candidates to be returned
+	candidates_qa := make(util.PriorityQueue, 0) // priority queue of candidates
+	heap.Init(&candidates_qa)
 
 	for _, qa := range qa_table {
 		// string matching
@@ -116,12 +114,8 @@ func (server *Server) CreateMessage(c *gin.Context) {
 			similarity = alg.HammingDistance(l_question, qa.Question)
 		}
 
-		if candidates_qa.Len() == queueSize {
-			if similarity < candidates_qa.PriorityAt(queueSize-1) {
-				continue
-			}
-		}
-		candidates_qa.PushVal(qa, similarity)
+		item := util.NewItem(qa, similarity)
+		heap.Push(&candidates_qa, item)
 	}
 
 	if code/2 >= 1 {
@@ -287,7 +281,6 @@ func handleMathMessage(input string, output *string) {
 			*output += "Hasil dari " + exp + " adalah " + res_str + "\n"
 		} else { // error
 			*output += "Tidak dapat menyelesaikan " + exp + " karena kesalahan sintaks.\n"
-			fmt.Println(err)
 		}
 	}
 }
@@ -296,7 +289,6 @@ func handleDateMessage(input string, output *string) {
 	// contains date question
 	// extract the date expression
 	dates := algo.ExtractDates(input)
-	fmt.Println(dates)
 	for _, date := range dates {
 		day := algo.DateToDay(date)
 		if day == "" {

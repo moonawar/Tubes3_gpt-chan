@@ -23,6 +23,19 @@ import (
 // 	}
 // }
 
+func (a *Algorithm) SolveMath(expr string) (float64, error) {
+	expr = strings.TrimSpace(expr)
+	// input := "-1 + 2 * 3 + ( -5  * 7)"
+	preprocess := preprocessInput(expr)
+	shunting := shuntingYard(preprocess)
+	result, err := evaluatePostfix(shunting)
+	if err != nil {
+		return 0, err
+	} else {
+		return result, nil
+	}
+}
+
 type Operator struct {
 	precedence        int
 	fn                func(float64, float64) (float64, error)
