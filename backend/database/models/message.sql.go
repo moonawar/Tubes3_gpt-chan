@@ -32,7 +32,7 @@ func (q *Queries) CreateMessage(ctx context.Context, arg CreateMessageParams) (M
 }
 
 const getChatMessages = `-- name: GetChatMessages :many
-SELECT chat_id, no, question, answer FROM "Message" WHERE chat_id = $1 ORDER BY "no" DESC LIMIT $2 OFFSET $3
+SELECT chat_id, no, question, answer FROM "Message" WHERE chat_id = $1 ORDER BY "no" ASC LIMIT $2 OFFSET $3
 `
 
 type GetChatMessagesParams struct {
