@@ -107,9 +107,9 @@ func ContainsDate(text string) bool {
 //
 // @note: format:
 //
-//	Tambah pertanyaan <pertanyaan> dengan jawaban <jawaban>
+//	Tambah(kan) pertanyaan <pertanyaan> dengan jawaban <jawaban>
 func ContainsQAAddRequest(text string) bool {
-	regex_string := `[Tt]ambah(\s+)?[Pp]ertanyaan(\s+)?(.+)(\s+)?[Dd]engan(\s+)?[Jj]awaban(\s+)?(.+)`
+	regex_string := `[Tt]ambah(kan)?(\s+)?[Pp]ertanyaan(\s+)?(.+)(\s+)?[Dd]engan(\s+)?[Jj]awaban(\s+)?(.+)`
 
 	re := regexp.MustCompile(regex_string)
 	return re.MatchString(text)
