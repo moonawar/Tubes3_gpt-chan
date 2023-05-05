@@ -15,6 +15,13 @@ type Item struct {
 	index int // The index of the item in the heap.
 }
 
+func NewItem(value db.QA, priority float64) *Item {
+	return &Item{
+		value:    value,
+		priority: priority,
+	}
+}
+
 func (item *Item) Value() db.QA {
 	return item.value
 }
