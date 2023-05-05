@@ -287,7 +287,7 @@ func handleMathMessage(input string, output *string) {
 		if err == nil { // success
 			*output += "Hasil dari " + exp + " adalah " + res_str + "\n"
 		} else { // error
-			*output += "Tidak dapat menyelesaikan " + exp + " karena kesalahan sintaks.\n"
+			*output += "Tidak dapat menyelesaikan " + exp + " karena `" + err.Error() + "`.\n"
 		}
 	}
 }
