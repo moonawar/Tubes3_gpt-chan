@@ -1,34 +1,34 @@
 import styles from './App.module.css';
-import {createSignal, For} from "solid-js";
+import {For} from "solid-js";
 import {DialogBox} from "./components/DialogBox";
 import {MessageBox} from "./components/MessageBox";
+import {current_algorithm, current_chat_id, dialogs, loadData, SERVER_URL, setDialogs, USERNAME} from "./globals";
+
+function sendMsg(msg) {
+    console.log(`Send message: ${msg}`)
+    fetch(`${SERVER_URL}/message`, {
+        method: "POST",
+        body: JSON.stringify({
+            chat_id: current_chat_id,
+            question: msg,
+            algorithm: current_algorithm,
+        })
+    }).then(response => {
+        if (!response.ok) {
+            return Promise.reject(response);
+        }
+        setDialogs(prev => prev.concat([msg]));
+        return response.json();
+    }).then(async data => {
+        let result = await data;
+        if (data !== null) {
+            setDialogs(prev => prev.concat([result["answer"]]));
+        }
+    })
+}
 
 function App() {
-    const [dialogList, setDialogs] = createSignal(dialogs);
-
-
-    const sendMsg = msg => {
-        console.log(`Send message: ${msg}`)
-        fetch(`${SERVER_URL}/message`, {
-            method: "POST",
-            body: JSON.stringify({
-                chat_id: current_chat_id,
-                question: msg,
-                algorithm: current_algorithm,
-            })
-        }).then(response => {
-            if (!response.ok) {
-                return Promise.reject(response);
-            }
-            setDialogs(prev => prev.concat([msg]));
-            return response.json();
-        }).then(async data => {
-            let result = await data;
-            if (data !== null) {
-                setDialogs(prev => prev.concat([result["answer"]]))
-            }
-        })
-    }
+    loadData();
 
     return (
         <div className={styles.App}>
@@ -50,8 +50,9 @@ function App() {
                                     "flex-direction": "column",
                                     "align-items": "center",
                                 }}>
-                                    <For each={dialogList()}>{(dialog, idx) =>
-                                        <DialogBox speaker={idx() % 2 === 0 ? `${USERNAME}` : "GPT-chan"} background={idx() % 2 === 0 ? "" : "#313244"}>
+                                    <For each={dialogs()}>{(dialog, idx) =>
+                                        <DialogBox speaker={idx() % 2 === 0 ? `${USERNAME}` : "GPT-chan"}
+                                                   background={idx() % 2 === 0 ? "" : "#313244"}>
                                             {dialog}
                                         </DialogBox>
                                     }</For>
