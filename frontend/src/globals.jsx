@@ -4,9 +4,9 @@ import {createSignal} from "solid-js";
 export const USERNAME = "JoJo";
 export const SERVER_URL = `http://${import.meta.env.VITE_SERVER_ADDRESS}`;
 export const [dialogs, setDialogs] = createSignal([]);
-
-export let current_algorithm = "kmp";
-export let current_chat_id = 1;
+export const [chats, setChats] = createSignal([]);
+export const [current_chat_id, setCurrentChatId] = createSignal(1);
+export const [current_algorithm, setCurrentAlgorithm] = createSignal("kmp");
 
 function logInOrSignUp() {
     fetch(`${SERVER_URL}/user`, {
@@ -26,7 +26,7 @@ function logInOrSignUp() {
 
 function loadDialogs(chat_id) {
     fetch(
-        `${SERVER_URL}/message?chat_id=${current_chat_id}&limit=100&page=1`
+        `${SERVER_URL}/message?chat_id=${current_chat_id()}&limit=100&page=1`
     ).then(response => {
         if (!response.ok) {
             return Promise.reject(response);
@@ -57,11 +57,11 @@ function createChat() {
         return response.json();
     }).then(async data => {
         let json = await data;
-        current_chat_id = json["chat_id"];
+        setCurrentChatId(json["chat_id"]);
     });
 }
 
-function loadChat() {
+function loadChats() {
     fetch(`${SERVER_URL}/chat/${USERNAME}`).then(response => {
         if (!response.ok) {
             return Promise.reject(response);
@@ -70,8 +70,9 @@ function loadChat() {
     }).then(async data => {
         if (data !== null) {
             let result = await data;
-            current_chat_id = result[0];
-            loadDialogs(current_chat_id);
+            setCurrentChatId(result[0]);
+            setChats(prev => prev.concat(result));
+            loadDialogs(current_chat_id());
         } else {
             createChat();
         }
@@ -82,5 +83,5 @@ function loadChat() {
 
 export function loadData() {
     logInOrSignUp();
-    loadChat();
+    loadChats();
 }

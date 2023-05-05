@@ -2,16 +2,26 @@ import styles from './App.module.css';
 import {For} from "solid-js";
 import {DialogBox} from "./components/DialogBox";
 import {MessageBox} from "./components/MessageBox";
-import {current_algorithm, current_chat_id, dialogs, loadData, SERVER_URL, setDialogs, USERNAME} from "./globals";
+import {
+    chats,
+    current_algorithm,
+    current_chat_id,
+    dialogs,
+    loadData,
+    SERVER_URL, setCurrentChatId,
+    setDialogs,
+    USERNAME
+} from "./globals";
+import {HistoryBox} from "./components/HistoryBox";
 
 function sendMsg(msg) {
     console.log(`Send message: ${msg}`)
     fetch(`${SERVER_URL}/message`, {
         method: "POST",
         body: JSON.stringify({
-            chat_id: current_chat_id,
+            chat_id: current_chat_id(),
             question: msg,
-            algorithm: current_algorithm,
+            algorithm: current_algorithm(),
         })
     }).then(response => {
         if (!response.ok) {
@@ -32,7 +42,76 @@ function App() {
 
     return (
         <div className={styles.App}>
-            <div className={styles.left}></div>
+            <div className={styles.left}>
+                <div style={{
+                    height: "100%",
+                    display: "flex",
+                    "flex-direction": "column",
+                }}>
+                    <div style={{
+                        position: "relative",
+                        height: "100%",
+                        width: "100%",
+                        flex: "1 1 0",
+                    }}>
+                        <nav style={{
+                            height: "100%",
+                            width: "100%",
+                            display: "flex",
+                            padding: "0.5rem",
+                            "flex-direction": "column",
+                        }}>
+                            <div role="button"
+                                 style={{
+                                     margin: "0.5rem",
+                                     display: "flex",
+                                     padding: "0.75rem",
+                                     "align-items": "center",
+                                     "flex-shrink": "0",
+                                     color: "white",
+                                     cursor: "pointer",
+                                     "margin-bottom": "0.25rem",
+                                     gap: "0.75rem",
+                                     border: "1px solid #F1F3F4",
+                                     "border-radius": "0.375rem",
+                                     "font-size": "0.875rem",
+                                     "line-height": "1,25rem",
+                                 }}>
+                                <span className="material-symbols-outlined" 
+                                      style={{color: "white"}}>
+                                    add_circle
+                                </span>
+                                New chat
+                            </div>
+                            <div style={{
+                                flex: "1 1 0",
+                                "overflow-y": "auto",
+                            }}>
+                                <div style={{
+                                    display: "flex",
+                                    "flex-direction": "column",
+                                    gap: "0.5rem",
+                                    "font-size": "0.875rem",
+                                    "line-height": "1.25rem",
+                                    "padding-bottom": "0.5rem",
+                                }}>
+                                    <div style={{position: "relative"}}>
+                                        <ol>
+                                            <For each={chats()}>{(chat, idx) =>
+                                                <HistoryBox id={chat}
+                                                            onClick={id => setCurrentChatId(id)}
+                                                            selected={chat === current_chat_id()}>
+                                                    {`Chat ${idx() + 1}`}
+                                                </HistoryBox>
+                                            }</For>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
             <div className={styles.right}>
                 <main className={styles.main}>
                     <div className={styles.dialogsContainer}>
