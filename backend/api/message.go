@@ -175,13 +175,13 @@ func (server *Server) CreateMessage(c *gin.Context) {
 					Answer:   a[i],
 				}
 
-				_, err := server.query.UpdateQA(c, params)
+				updated_qa, err := server.query.UpdateQA(c, params)
 				if err != nil {
 					c.JSON(http.StatusInternalServerError, errorResponse(err))
 					return
 				}
 
-				answer += "Pertanyaan: `" + q[i] + "` sudah ada! Jawaban diupdate menjadi `" + a[i] + "`.\n"
+				answer += "Pertanyaan: `" + updated_qa.Question + "` sudah ada! Jawaban diupdate menjadi `" + a[i] + "`.\n"
 				candidates_qa.RemoveAt(item_match_idx)
 			}
 		}
@@ -225,13 +225,13 @@ func (server *Server) CreateMessage(c *gin.Context) {
 			if !exists {
 				answer += "Pertanyaan: `" + q[i] + "` tidak ditemukan di database.\n"
 			} else {
-				_, err := server.query.RemoveQA(c, item_match_id)
+				removed_qa, err := server.query.RemoveQA(c, item_match_id)
 				if err != nil {
 					c.JSON(http.StatusInternalServerError, errorResponse(err))
 					return
 				}
 
-				answer += "Pertanyaan: `" + q[i] + "` berhasil dihapus dari database.\n"
+				answer += "Pertanyaan: `" + removed_qa.Question + "` berhasil dihapus dari database.\n"
 				candidates_qa.RemoveAt(item_match_idx)
 			}
 		}
