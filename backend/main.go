@@ -1,10 +1,18 @@
 package main
 
 import (
+<<<<<<< HEAD
 	"database/sql"
 	"fmt"
 	"gpt-chan/api"
 	db "gpt-chan/database/models"
+=======
+	"fmt"
+	"gpt-chan/api"
+	db "gpt-chan/database/models"
+
+	"database/sql"
+>>>>>>> 55ec6e311ea220598681f5fd6965bfdb3457c55f
 	"log"
 	"os"
 
