@@ -14,7 +14,10 @@ func (a *Algorithm) SolveMath(expr string) (float64, error) {
 	expr = strings.TrimSpace(expr)
 	// input := "-1 + 2 * 3 + ( -5  * 7)"
 	preprocess := preprocessInput(expr)
-	shunting := shuntingYard(preprocess)
+	shunting, err := shuntingYard(preprocess)
+	if err != nil {
+		return 0, err
+	}
 	result, err := evaluatePostfix(shunting)
 	if err != nil {
 		return 0, err
@@ -68,7 +71,7 @@ func preprocessInput(input string) string {
 	return strings.TrimSpace(processed.String())
 }
 
-func tokenize(input string) []string {
+func tokenize(input string) ([]string, error) {
 	var tokens []string
 	regexes := make([]*regexp.Regexp, len(tokenPatterns))
 	for i, pattern := range tokenPatterns {
@@ -88,16 +91,19 @@ func tokenize(input string) []string {
 			}
 		}
 		if !found {
-			return []string{}
+			return []string{}, errors.New("unrecognized character `" + input[0:1] + "`")
 		}
 	}
-	return tokens
+	return tokens, nil
 }
 
-func shuntingYard(input string) []string {
+func shuntingYard(input string) ([]string, error) {
 	output := []string{}
 	operatorStack := []rune{}
-	tokens := tokenize(input)
+	tokens, err := tokenize(input)
+	if err != nil {
+		return []string{}, err
+	}
 
 	for _, token := range tokens {
 		tokenRune := []rune(token)
@@ -134,7 +140,7 @@ func shuntingYard(input string) []string {
 		operatorStack = operatorStack[:len(operatorStack)-1]
 	}
 
-	return output
+	return output, nil
 }
 
 func evaluatePostfix(postfix []string) (float64, error) {
