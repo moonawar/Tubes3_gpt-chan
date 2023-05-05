@@ -6,6 +6,7 @@ import (
 	algo "gpt-chan/algorithm"
 	db "gpt-chan/database/models"
 	util "gpt-chan/util"
+	"math"
 	"net/http"
 	"strconv"
 	"strings"
@@ -111,7 +112,7 @@ func (server *Server) CreateMessage(c *gin.Context) {
 		similarity = 1.0
 
 		if match < 0 {
-			similarity = alg.HammingDistance(l_question, qa.Question)
+			similarity = alg.LevenshteinDistance(l_question, qa.Question)
 		}
 
 		item := util.NewItem(qa, similarity)
@@ -142,7 +143,7 @@ func (server *Server) CreateMessage(c *gin.Context) {
 				similarity = 1.0
 
 				if match < 0 {
-					similarity = alg.HammingDistance(q[i], candidate.Value().Question)
+					similarity = alg.LevenshteinDistance(q[i], candidate.Value().Question)
 				}
 
 				exists = similarity > SIMILARITY_TRESHOLD
@@ -210,7 +211,7 @@ func (server *Server) CreateMessage(c *gin.Context) {
 				similarity = 1.0
 
 				if match < 0 {
-					similarity = alg.HammingDistance(q[i], candidate.Value().Question)
+					similarity = alg.LevenshteinDistance(q[i], candidate.Value().Question)
 				}
 
 				exists = similarity > SIMILARITY_TRESHOLD
@@ -250,7 +251,13 @@ func (server *Server) CreateMessage(c *gin.Context) {
 	}
 
 	if answer == "" {
-		answer = "Maaf, saya tidak mengerti pertanyaan Anda. Silakan coba lagi."
+		answer = "Maaf, saya tidak mengerti pertanyaan Anda. Apakah maksud kamu:\n"
+		size := int(math.Min(float64(candidates_qa.Len()), float64(3)))
+
+		for i := 0; i < size; i++ {
+			answer += "`" + candidates_qa[i].Value().Question + "`?\n"
+		}
+		answer += "Silahkan ketik ulang pertanyaan yang tepat.\n"
 	}
 
 	msg_params := db.CreateMessageParams{
