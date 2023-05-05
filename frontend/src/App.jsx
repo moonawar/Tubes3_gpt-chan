@@ -8,8 +8,8 @@ const USERNAME = "JoJo";
 const SERVER_URL = `http://${import.meta.env.VITE_SERVER_ADDRESS}`;
 const [dialogs, setDialogs] = createSignal([]);
 const [chats, setChats] = createSignal([]);
-const [current_chat_id, setCurrentChatId] = createSignal(1);
-const [current_algorithm, setCurrentAlgorithm] = createSignal("kmp");
+const [currentChatId, setCurrentChatId] = createSignal(1);
+const [currentAlgorithm, setCurrentAlgorithm] = createSignal("kmp");
 
 function logInOrSignUp() {
     fetch(`${SERVER_URL}/user`, {
@@ -29,7 +29,7 @@ function logInOrSignUp() {
 
 function loadDialogs() {
     fetch(
-        `${SERVER_URL}/message?chat_id=${current_chat_id()}&limit=100&page=1`
+        `${SERVER_URL}/message?chat_id=${currentChatId()}&limit=100&page=1`
     ).then(response => {
         if (!response.ok) {
             return Promise.reject(response);
@@ -47,7 +47,7 @@ function loadDialogs() {
     });
 }
 
-function createChat() {
+function createChat(doChangeCurrentId) {
     fetch(`${SERVER_URL}/chat`, {
         method: "POST",
         body: JSON.stringify({
@@ -60,7 +60,9 @@ function createChat() {
         return response.json();
     }).then(async data => {
         let json = await data;
-        setCurrentChatId(json["chat_id"]);
+        let chatId = json["chat_id"];
+        if (doChangeCurrentId) setCurrentChatId(chatId);
+        setChats(prev => prev.concat(chatId))
     });
 }
 
@@ -75,9 +77,9 @@ function loadChats() {
             let result = await data;
             setCurrentChatId(result[0]);
             setChats(prev => prev.concat(result));
-            loadDialogs(current_chat_id());
+            loadDialogs(currentChatId());
         } else {
-            createChat();
+            createChat(true);
         }
     }).catch(error => {
         console.log(error)
@@ -94,9 +96,9 @@ function sendMsg(msg) {
     fetch(`${SERVER_URL}/message`, {
         method: "POST",
         body: JSON.stringify({
-            chat_id: current_chat_id(),
+            chat_id: currentChatId(),
             question: msg,
-            algorithm: current_algorithm(),
+            algorithm: currentAlgorithm(),
         })
     }).then(response => {
         if (!response.ok) {
@@ -151,8 +153,9 @@ function App() {
                                      "border-radius": "0.375rem",
                                      "font-size": "0.875rem",
                                      "line-height": "1,25rem",
-                                 }}>
-                                <span className="material-symbols-outlined" 
+                                 }}
+                                 onClick={_ => createChat(false)}>
+                                <span className="material-symbols-outlined"
                                       style={{color: "white"}}>
                                     add_circle
                                 </span>
@@ -175,7 +178,7 @@ function App() {
                                             <For each={chats()}>{(chat, idx) =>
                                                 <HistoryBox id={chat}
                                                             onClick={id => setCurrentChatId(id)}
-                                                            selected={chat === current_chat_id()}>
+                                                            selected={chat === currentChatId()}>
                                                     {`Chat ${idx() + 1}`}
                                                 </HistoryBox>
                                             }</For>
