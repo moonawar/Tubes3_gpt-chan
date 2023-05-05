@@ -1,11 +1,10 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"gpt-chan/api"
 	db "gpt-chan/database/models"
-
-	"database/sql"
 	"log"
 	"os"
 
@@ -31,4 +30,7 @@ func main() {
 	if err := server.Start("0.0.0.0:8080"); err != nil {
 		log.Fatal("cannot start server:", err)
 	}
+	// alg := algorithm.New()
+	// res := alg.LevenshteinDistance("Kapan tubes ini selesak", "Kapan ttubes ini selesai")
+	// fmt.Println(res)
 }

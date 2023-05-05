@@ -40,7 +40,8 @@ run:
 
 deploy:
 	docker rmi gpt-chan
-	docker build -t gpt-chan:latest .
+	docker rmi gcr.io/gpt-chan-385720/app
+	make image
 	docker tag gpt-chan:latest gcr.io/gpt-chan-385720/app
 	docker push gcr.io/gpt-chan-385720/app
 
