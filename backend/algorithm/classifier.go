@@ -57,14 +57,14 @@ func ContainsCandidateMathExp(text string) bool {
 	Trim(&text)
 
 	// recursively check for math expression
-	regex_string := `(-?\d+|\(-?\d+\)|\(-?\d+)([\-\+\*\/\^]*((\(-?\d+\)|-?\d+\)|\d+|\(-?\d+)))*`
+	regex_string := `(-?(\d*\.)?\d+|\(-?(\d*\.)?\d+\)|\(-?(\d*\.)?\d+)([\-\+\*\/\^]*((\(-?(\d*\.)?\d+\)|-?(\d*\.)?\d+\)|\d+|\(-?(\d*\.)?\d+)))*`
 
 	re := regexp.MustCompile(regex_string)
 	all_exps := re.FindAllString(text, -1) // all candidate math expressions including date and unary expression
 	pure_exps := []string{}                // remove date and unary expression
 
 	for _, exp := range all_exps {
-		if !ContainsDate(exp) && !IsUnaryMathExp(exp) {
+		if !ContainsDate(exp) /*&& !IsUnaryMathExp(exp)*/ {
 			pure_exps = append(pure_exps, exp)
 		}
 	}
@@ -75,16 +75,16 @@ func ContainsCandidateMathExp(text string) bool {
 // IsUnaryMathExp is a function that checks if the given text is a unary math expression.
 // @params text: input string to be checked
 // @return bool: true if text is a unary math expression, false otherwise
-func IsUnaryMathExp(text string) bool {
-	// remove whitespace so it's easier to check
-	Trim(&text)
+// func IsUnaryMathExp(text string) bool {
+// 	// remove whitespace so it's easier to check
+// 	Trim(&text)
 
-	// recursively check for math expression
-	regex_string := `^(\d+|\(-?\d+\))$`
+// 	// recursively check for math expression
+// 	regex_string := `^(\d+|\(-?\d+\))$`
 
-	re := regexp.MustCompile(regex_string)
-	return re.MatchString(text)
-}
+// 	re := regexp.MustCompile(regex_string)
+// 	return re.MatchString(text)
+// }
 
 // ContainsDate is a function that checks if the given text contains a date.
 // @params text: input string to be checked
@@ -136,14 +136,14 @@ func ExtractMathExps(text string) []string {
 	// remove whitespace so it's easier to check
 	Trim(&text)
 
-	regex_string := `(-?\d+|\(-?\d+\)|\(-?\d+)([\-\+\*\/\^]*((\(-?\d+\)|-?\d+\)|\d+|\(-?\d+)))*`
+	regex_string := `(-?(\d*\.)?\d+|\(-?(\d*\.)?\d+\)|\(-?(\d*\.)?\d+)([\-\+\*\/\^]*((\(-?(\d*\.)?\d+\)|-?(\d*\.)?\d+\)|\d+|\(-?(\d*\.)?\d+)))*`
 
 	re := regexp.MustCompile(regex_string)
 	all_exps := re.FindAllString(text, -1) // all candidate math expressions including date and unary expression
 	pure_exps := []string{}                // remove date and unary expression
 
 	for _, exp := range all_exps {
-		if !ContainsDate(exp) && !IsUnaryMathExp(exp) {
+		if !ContainsDate(exp) /*&& !IsUnaryMathExp(exp)*/ {
 			pure_exps = append(pure_exps, exp)
 		}
 	}
