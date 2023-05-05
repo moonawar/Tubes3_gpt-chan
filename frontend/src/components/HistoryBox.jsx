@@ -22,16 +22,12 @@ export function HistoryBox(props) {
                  event.currentTarget.style.background = props.selected ? "#CCCCCC20" : "transparent";
              }}
             onClick={_ => props.onClick(props.id)}>
-            <span className="material-symbols-outlined"
-                  style={{color: "white"}}>
-                chat
-            </span>
+            <span className="material-symbols-outlined">chat</span>
             <div style={{
                 position: "relative",
                 flex: "1 1 0",
                 overflow: "hidden",
                 "max-height": "1.25rem",
-                color: "white",
             }}>
                 {props.children}
             </div>

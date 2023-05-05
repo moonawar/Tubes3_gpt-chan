@@ -1,5 +1,5 @@
 import styles from './App.module.css';
-import {createSignal, For} from "solid-js";
+import {createEffect, createSignal, For} from "solid-js";
 import {DialogBox} from "./components/DialogBox";
 import {MessageBox} from "./components/MessageBox";
 import {HistoryBox} from "./components/HistoryBox";
@@ -117,6 +117,12 @@ function sendMsg(msg) {
 
 function App() {
     loadData();
+    createEffect(() => {
+        console.log(`Current Algorithm: ${currentAlgorithm()}`);
+    });
+    createEffect(() => {
+        console.log(`Current Chat Id: ${currentChatId()}`);
+    });
 
     return (
         <div className={styles.App}>
@@ -146,7 +152,6 @@ function App() {
                                      padding: "0.75rem",
                                      "align-items": "center",
                                      "flex-shrink": "0",
-                                     color: "white",
                                      cursor: "pointer",
                                      "margin-bottom": "0.25rem",
                                      gap: "0.75rem",
@@ -156,10 +161,7 @@ function App() {
                                      "line-height": "1,25rem",
                                  }}
                                  onClick={_ => createChat(false)}>
-                                <span className="material-symbols-outlined"
-                                      style={{color: "white"}}>
-                                    add_circle
-                                </span>
+                                <span className="material-symbols-outlined">add_circle</span>
                                 New chat
                             </div>
                             <div style={{
@@ -189,6 +191,36 @@ function App() {
                                         </ol>
                                     </div>
                                 </div>
+                            </div>
+                            <div style={{
+                                "border-top": "1px solid white",
+                                "padding-top": "0.5rem",
+                                display: "flex",
+                                "justify-content": "center",
+                                gap: "0.75rem"
+                            }}>
+                                <div>
+                                    <input type="radio" id="kmp" name="algorithm" value="kmp"
+                                           checked={currentAlgorithm() === "kmp"}
+                                           onInput={_ => setCurrentAlgorithm("kmp")}/>
+                                    <label htmlFor="kmp" style={{"margin-left": "10px"}}>KMP</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="bm" name="algorithm" value="bm"
+                                           checked={currentAlgorithm() === "bm"}
+                                           onInput={_ => setCurrentAlgorithm("bm")}/>
+                                    <label htmlFor="bm" style={{"margin-left": "10px"}}>BM</label>
+                                </div>
+                            </div>
+                            <div style={{
+                                "margin-top": "1.5rem",
+                                display: "flex",
+                                gap: "0.75rem",
+                                "justify-content": "center",
+                                "align-items": "center",
+                            }}>
+                                <span className="material-symbols-outlined">account_circle</span>
+                                {USERNAME}
                             </div>
                         </nav>
                     </div>
@@ -229,7 +261,6 @@ function App() {
                     <div className={styles.formSection}>
                         <MessageBox onSend={sendMsg}/>
                         <div style={{
-                            color: "white",
                             "padding-bottom": "1.75rem",
                             "padding-top": "0.75rem",
                             "padding-left": "1rem",
