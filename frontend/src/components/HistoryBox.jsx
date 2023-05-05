@@ -1,5 +1,4 @@
 export function HistoryBox(props) {
-    let bg = props.selected ? "#CCCCCC20" : "transparent";
     return (
         <div role="button"
              style={{
@@ -12,7 +11,7 @@ export function HistoryBox(props) {
                  "border-radius": "0.375rem",
                  cursor: "pointer",
                  "word-break": "break-all",
-                 background: bg,
+                 background: props.selected ? "#CCCCCC20" : "transparent",
              }}
              onMouseEnter={event => {
                  if (!props.selected) {
@@ -20,8 +19,9 @@ export function HistoryBox(props) {
                  }
              }}
              onMouseLeave={event => {
-                 event.currentTarget.style.background = bg;
-             }}>
+                 event.currentTarget.style.background = props.selected ? "#CCCCCC20" : "transparent";
+             }}
+            onClick={_ => props.onClick(props.id)}>
             <span className="material-symbols-outlined"
                   style={{color: "white"}}>
                 chat

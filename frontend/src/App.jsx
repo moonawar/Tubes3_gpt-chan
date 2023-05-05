@@ -37,6 +37,7 @@ function loadDialogs() {
         return response.json();
     }).then(async data => {
         let arr = await data;
+        setDialogs([]);
         if (arr !== null) {
             for (let obj of Object.values(arr)) {
                 setDialogs(prev => prev.concat(obj["question"], obj["answer"]));
@@ -177,8 +178,11 @@ function App() {
                                         <ol>
                                             <For each={chats()}>{(chat, idx) =>
                                                 <HistoryBox id={chat}
-                                                            onClick={id => setCurrentChatId(id)}
-                                                            selected={chat === currentChatId()}>
+                                                            onClick={id => {
+                                                                setCurrentChatId(id);
+                                                                loadDialogs();
+                                                            }}
+                                                            selected={currentChatId() === chat}>
                                                     {`Chat ${idx() + 1}`}
                                                 </HistoryBox>
                                             }</For>
