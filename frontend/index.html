@@ -14,7 +14,7 @@
 <script>
     // global variables
     const USERNAME = "JoJo";
-    const SERVER_URL = "http://0.0.0.0:8000"  // NOTE: should be obtained from .env file
+    const SERVER_URL = "http://0.0.0.0:8080"  // NOTE: should be obtained from .env file
     fetch(`${SERVER_URL}/user`, {
         method: "POST",
         body: JSON.stringify({username: USERNAME}),

@@ -5,6 +5,31 @@ import {MessageBox} from "./components/MessageBox";
 
 function App() {
     const [dialogList, setDialogs] = createSignal(dialogs);
+
+
+    const sendMsg = msg => {
+        console.log(`Send message: ${msg}`)
+        fetch(`${SERVER_URL}/message`, {
+            method: "POST",
+            body: JSON.stringify({
+                chat_id: current_chat_id,
+                question: msg,
+                algorithm: current_algorithm,
+            })
+        }).then(response => {
+            if (!response.ok) {
+                return Promise.reject(response);
+            }
+            setDialogs(prev => prev.concat([msg]));
+            return response.json();
+        }).then(async data => {
+            let result = await data;
+            if (data !== null) {
+                setDialogs(prev => prev.concat([result["answer"]]))
+            }
+        })
+    }
+
     return (
         <div className={styles.App}>
             <div className={styles.left}></div>
@@ -40,7 +65,7 @@ function App() {
                         </div>
                     </div>
                     <div className={styles.formSection}>
-                        <MessageBox dialogs={dialogList} setDialogs={setDialogs}/>
+                        <MessageBox onSend={sendMsg}/>
                         <div style={{
                             color: "white",
                             "padding-bottom": "1.75rem",

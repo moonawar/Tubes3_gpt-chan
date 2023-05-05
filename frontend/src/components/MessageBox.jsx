@@ -3,34 +3,11 @@ import styles from "../App.module.css";
 
 export function MessageBox(props) {
     const [msg, setMsg] = createSignal("");
-
-    const sendMsg = msg => {
-        console.log(`Send message: ${msg}`)
-        fetch(`${SERVER_URL}/message`, {
-            method: "POST",
-            body: JSON.stringify({
-                chat_id: current_chat_id,
-                question: msg,
-                algorithm: current_algorithm,
-            })
-        }).then(response => {
-            if (!response.ok) {
-                return Promise.reject(response);
-            }
-            props.setDialogs(props.dialogs().concat([msg]));
-            return response.json();
-        }).then(async data => {
-            let result = await data;
-            if (data !== null) {
-                props.setDialogs(props.dialogs().concat([result["answer"]]))
-            }
-        })
-        setMsg("");
-    }
     const questionKeyDown = event => {
-        if (event.key === "Enter" && !event.shiftKey) {
+        if (event.key === "Enter" && !event.shiftKey && msg().length > 0) {
             event.preventDefault();
-            sendMsg(msg())
+            props.onSend(msg());
+            setMsg("");
         }
     };
     const onMsgInput = ({target}) => {
@@ -75,7 +52,10 @@ export function MessageBox(props) {
                     onMouseEnter={sendMsgEnter}
                     onMouseLeave={sendMsgLeave}
                     onClick={_ => {
-                        if (msg().length > 0) sendMsg(msg())
+                        if (msg().length > 0) {
+                            props.onSend(msg());
+                            setMsg("");
+                        }
                     }}
                     role="button">
                     <span id="send-msg"
