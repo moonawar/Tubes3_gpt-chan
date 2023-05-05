@@ -13,6 +13,15 @@ func ExtractAddQuestions(text string) []string {
 	text = RemoveExtraSpaces(text)
 
 	res := re.FindAllString(text, -1)
+
+	regex_pattern2 := `(?<=[Tt]ambahkan(\s)[Pp]ertanyaan(\s))(.+)(?=[Dd]engan)`
+	re2 := regexp.MustCompile(regex_pattern2)
+	text = RemoveExtraSpaces(text)
+
+	res2 := re2.FindAllString(text, -1)
+
+	res = append(res, res2...)
+
 	for i := 0; i < len(res); i++ {
 		TrimFrontBack(&res[i])
 	}
