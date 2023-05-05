@@ -3,25 +3,12 @@ package algorithm
 import (
 	"errors"
 	"math"
+	"regexp"
 	"strconv"
 	"strings"
 )
 
-// func main() {
-// 	reader := bufio.NewReader(os.Stdin)
-// 	fmt.Println("Masukkan persamaan matematika:")
-// 	expr, _ := reader.ReadString('\n')
-// 	expr = strings.TrimSpace(expr)
-// 	// input := "-1 + 2 * 3 + ( -5  * 7)"
-// 	preprocess := preprocessInput(expr)
-// 	shunting := shuntingYard(preprocess)
-// 	result, err := evaluatePostfix(shunting)
-// 	if err != nil {
-// 		fmt.Printf("Error       : '%s'\n", err)
-// 	} else {
-// 		fmt.Printf("Result      : '%f'\n", result)
-// 	}
-// }
+var tokenPatterns = [...]string{`^\(`, `^\)`, `^\+`, `^-`, `^\*`, `^/`, `^\^`, `^(\d*\.)?\d+`}
 
 func (a *Algorithm) SolveMath(expr string) (float64, error) {
 	expr = strings.TrimSpace(expr)
@@ -60,8 +47,8 @@ func isOperator(token rune) bool {
 	return exists
 }
 
-func isDigit(token string) bool {
-	_, err := strconv.Atoi(token)
+func isNumber(token string) bool {
+	_, err := strconv.ParseFloat(token, 64)
 	return err == nil
 }
 
@@ -73,7 +60,6 @@ func preprocessInput(input string) string {
 		if char == '-' && (i == 0 || input[i-1] == '(') {
 			processed.WriteString(" 0 -")
 		} else {
-			processed.WriteRune(' ')
 			processed.WriteRune(char)
 		}
 	}
@@ -82,14 +68,40 @@ func preprocessInput(input string) string {
 	return strings.TrimSpace(processed.String())
 }
 
+func tokenize(input string) []string {
+	var tokens []string
+	regexes := make([]*regexp.Regexp, len(tokenPatterns))
+	for i, pattern := range tokenPatterns {
+		regexes[i] = regexp.MustCompile(pattern)
+	}
+	for len(input) > 0 {
+		input = strings.TrimSpace(input)
+		found := false
+	inner:
+		for _, re := range regexes {
+			token := re.FindString(input)
+			if len(token) > 0 {
+				tokens = append(tokens, token)
+				input = input[len(token):]
+				found = true
+				break inner
+			}
+		}
+		if !found {
+			return []string{}
+		}
+	}
+	return tokens
+}
+
 func shuntingYard(input string) []string {
 	output := []string{}
 	operatorStack := []rune{}
-	tokens := strings.Fields(input)
+	tokens := tokenize(input)
 
 	for _, token := range tokens {
 		tokenRune := []rune(token)
-		if isDigit(token) {
+		if isNumber(token) {
 			output = append(output, token)
 		} else if isOperator(tokenRune[0]) {
 			op1 := []rune(token)[0]
@@ -130,7 +142,7 @@ func evaluatePostfix(postfix []string) (float64, error) {
 
 	for _, token := range postfix {
 		tokenRune := []rune(token)
-		if isDigit(token) {
+		if isNumber(token) {
 			num, _ := strconv.ParseFloat(token, 64)
 			stack = append(stack, num)
 		} else if isOperator(tokenRune[0]) {
